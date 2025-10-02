@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISOSSOMA - WEB</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #2c3e7d;
+            --secondary-blue: #3d52a0;
+            --lime-green: #9dc62d;
+            --forest-green: #00853e;
+            --light-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --white: #ffffff;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Icons using Unicode */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Login Page */
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            padding: 20px;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            width: 120px;
+            height: 120px;
+            background: var(--white);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 5px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--lime-green);
+            box-shadow: 0 0 0 3px rgba(157, 198, 45, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--lime-green), var(--forest-green));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: none;
+            min-height: 100vh;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .app-container.show {
+            opacity: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--primary-blue);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--white);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+        }
+
+        .sidebar-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .sidebar-logo-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .menu-item.active {
+            background: rgba(157, 198, 45, 0.15);
+            color: var(--lime-green);
+            border-left-color: var(--lime-green);
+        }
+
+        .menu-item .icon {
+            font-size: 18px;
+            width: 24px;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--lime-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: var(--white);
+            padding: 16px 32px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .topbar-left h2 {
+            font-size: 24px;
+            color: var(--primary-blue);
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .topbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light-bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+
+        .btn-icon:hover {
+            background: var(--lime-green);
+            color: var(--white);
+        }
+
+        .content-area {
+            padding: 32px;
+            flex: 1;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .stat-icon.blue {
+            background: rgba(44, 62, 125, 0.1);
+            color: var(--primary-blue);
+        }
+
+        .stat-icon.green {
+            background: rgba(157, 198, 45, 0.1);
+            color: var(--lime-green);
+        }
+
+        .stat-icon.forest {
+            background: rgba(0, 133, 62, 0.1);
+            color: var(--forest-green);
+        }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .stat-info p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-success {
+            background: var(--lime-green);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: var(--forest-green);
+        }
+
+        .btn-secondary {
+            background: var(--light-bg);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: var(--white);
+        }
+
+        .btn-info {
+            background: var(--secondary-blue);
+            color: var(--white);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--light-bg);
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: var(--light-bg);
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(0, 133, 62, 0.1);
+            color: var(--forest-green);
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #f0ad4e;
+        }
+
+        .badge-danger {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        /* Actions */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .action-btn.edit {
+            background: rgba(61, 82, 160, 0.1);
+            color: var(--secondary-blue);
+        }
+
+        .action-btn.delete {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+
+        .action-btn.view {
+            background: rgba(157, 198, 45, 0.1);
+            color: var(--lime-green);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Quotation Builder */
+        .quotation-items {
+            margin: 20px 0;
+        }
+
+        .quotation-item {
+            background: var(--light-bg);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quotation-summary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 24px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .summary-total {
+            border-top: 2px solid rgba(255, 255, 255, 0.3);
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .sidebar-logo-text,
+            .menu-item span,
+            .user-details {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-card">
+            <div class="login-logo">
+                <div class="logo-icon">
+                    <img src="img/logo-removebg-preview.png" alt="ISOSSOMA Logo">
+                </div>
+                <h1 class="login-title">Sistema de Cotizaciones</h1>
+                <p class="login-subtitle">ISOSSOMA</p>
+            </div>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" placeholder="usuario@isossoma.com" id="loginEmail">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" placeholder="••••••••" id="loginPassword">
+                </div>
+                <button type="button" class="btn-primary" onclick="handleLogin()">
+                    Iniciar Sesión →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="mainApp">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <img src="img/logo-removebg-preview.png" alt="ISOSSOMA Logo">
+                    </div>
+                    <div class="sidebar-logo-text">ISOSSOMA</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <div class="menu-item active" data-page="dashboard">
+                    <span class="icon">📊</span>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" data-page="quotations">
+                    <span class="icon">📄</span>
+                    <span>Cotizaciones</span>
+                </div>
+                <div class="menu-item" data-page="clients">
+                    <span class="icon">👥</span>
+                    <span>Clientes</span>
+                </div>
+                <div class="menu-item" data-page="tariffs">
+                    <span class="icon">🏷️</span>
+                    <span>Tarifario</span>
+                </div>
+                <div class="menu-item" data-page="users">
+                    <span class="icon">⚙️</span>
+                    <span>Usuarios</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">JP</div>
+                    <div class="user-details">
+                        <div class="user-name">Juan Pérez</div>
+                        <div class="user-role">Administrador</div>
+                    </div>
+                    <button class="btn-icon" onclick="logout()" title="Cerrar Sesión">
+                        ↪
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <h2 id="pageTitle">Dashboard</h2>
+                    <div class="breadcrumb">Inicio / Dashboard</div>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn-icon" title="Notificaciones">🔔</button>
+                    <button class="btn-icon" title="Configuración">⚙️</button>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Page -->
+                <div class="page-content active" id="dashboard">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">📋</div>
+                            <div class="stat-info">
+                                <h3>45</h3>
+                                <p>Cotizaciones Activas</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">✔</div>
+                            <div class="stat-info">
+                                <h3>128</h3>
+                                <p>Cotizaciones Aprobadas</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon forest">👥</div>
+                            <div class="stat-info">
+                                <h3>67</h3>
+                                <p>Clientes Activos</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">💰</div>
+                            <div class="stat-info">
+                                <h3>S/ 245K</h3>
+                                <p>Valor Total</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Últimas Cotizaciones</h3>
+                            <button class="btn btn-success" onclick="showPage('quotations')">
+                                ➕ Nueva Cotización
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>N° Cotización</th>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Monto</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>COT-2025-001</td>
+                                            <td>Empresa Minera ABC</td>
+                                            <td>28/09/2025</td>
+                                            <td>S/ 15,500</td>
+                                            <td><span class="badge badge-success">Aprobada</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn view" title="Ver">👁️</button>
+                                                    <button class="action-btn edit" title="Editar">✏️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>COT-2025-002</td>
+                                            <td>Constructora DEF</td>
+                                            <td>29/09/2025</td>
+                                            <td>S/ 8,900</td>
+                                            <td><span class="badge badge-warning">Pendiente</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn view" title="Ver">👁️</button>
+                                                    <button class="action-btn edit" title="Editar">✏️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quotations Page -->
+                <div class="page-content" id="quotations">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Gestión de Cotizaciones</h3>
+                            <button class="btn btn-success" onclick="openModal('quotationModal')">
+                                ➕ Nueva Cotización
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-bar">
+                                <input type="text" class="search-input" placeholder="Buscar cotización...">
+                                <button class="btn btn-secondary">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>N° Cotización</th>
+                                            <th>Cliente</th>
+                                            <th>Servicios</th>
+                                            <th>Fecha</th>
+                                            <th>Monto Total</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>COT-2025-001</td>
+                                            <td>Empresa Minera ABC</td>
+                                            <td>EIA, Monitoreo Ambiental</td>
+                                            <td>28/09/2025</td>
+                                            <td>S/ 15,500.00</td>
+                                            <td><span class="badge badge-success">Aprobada</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn view" title="Ver">👁️</button>
+                                                    <button class="action-btn edit" onclick="editQuotation(1)"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('cotización')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>COT-2025-002</td>
+                                            <td>Constructora DEF</td>
+                                            <td>DIA, Capacitación Ambiental</td>
+                                            <td>29/09/2025</td>
+                                            <td>S/ 8,900.00</td>
+                                            <td><span class="badge badge-warning">Pendiente</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn view" title="Ver">👁️</button>
+                                                    <button class="action-btn edit" onclick="editQuotation(2)"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('cotización')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clients Page -->
+                <div class="page-content" id="clients">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Gestión de Clientes</h3>
+                            <button class="btn btn-success" onclick="openModal('clientModal')">
+                                ➕ Nuevo Cliente
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-bar">
+                                <input type="text" class="search-input" placeholder="Buscar cliente...">
+                                <button class="btn btn-secondary">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>RUC/DNI</th>
+                                            <th>Razón Social / Nombre</th>
+                                            <th>Contacto</th>
+                                            <th>Email</th>
+                                            <th>Teléfono</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>20123456789</td>
+                                            <td>Empresa Minera ABC S.A.C.</td>
+                                            <td>Carlos Rodríguez</td>
+                                            <td>carlos.r@minera.com</td>
+                                            <td>+51 987 654 321</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn view" title="Ver">👁️</button>
+                                                    <button class="action-btn edit" onclick="editClient()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('cliente')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>20987654321</td>
+                                            <td>Constructora DEF E.I.R.L.</td>
+                                            <td>María González</td>
+                                            <td>mgonzalez@constructora.com</td>
+                                            <td>+51 912 345 678</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn view" title="Ver">👁️</button>
+                                                    <button class="action-btn edit" onclick="editClient()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('cliente')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tariffs Page -->
+                <div class="page-content" id="tariffs">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Mantenimiento de Tarifario</h3>
+                            <button class="btn btn-success" onclick="openModal('tariffModal')">
+                                ➕ Nuevo Servicio
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-bar">
+                                <input type="text" class="search-input" placeholder="Buscar servicio...">
+                                <button class="btn btn-secondary">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Servicio</th>
+                                            <th>Categoría</th>
+                                            <th>Unidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>SRV-001</td>
+                                            <td>Estudio de Impacto Ambiental (EIA)</td>
+                                            <td>Estudios Ambientales</td>
+                                            <td>Proyecto</td>
+                                            <td>S/ 8,500.00</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn edit" onclick="editTariff()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('servicio')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SRV-002</td>
+                                            <td>Declaración de Impacto Ambiental (DIA)</td>
+                                            <td>Estudios Ambientales</td>
+                                            <td>Proyecto</td>
+                                            <td>S/ 5,200.00</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn edit" onclick="editTariff()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('servicio')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SRV-003</td>
+                                            <td>Monitoreo de Calidad de Agua</td>
+                                            <td>Monitoreo Ambiental</td>
+                                            <td>Punto/Mes</td>
+                                            <td>S/ 350.00</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn edit" onclick="editTariff()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('servicio')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SRV-004</td>
+                                            <td>Capacitación en Gestión Ambiental</td>
+                                            <td>Capacitación</td>
+                                            <td>Hora</td>
+                                            <td>S/ 180.00</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn edit" onclick="editTariff()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('servicio')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Page -->
+                <div class="page-content" id="users">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Gestión de Usuarios</h3>
+                            <button class="btn btn-success" onclick="openModal('userModal')">
+                                ➕ Nuevo Usuario
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="search-bar">
+                                <input type="text" class="search-input" placeholder="Buscar usuario...">
+                                <button class="btn btn-secondary">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Usuario</th>
+                                            <th>Nombre Completo</th>
+                                            <th>Email</th>
+                                            <th>Rol</th>
+                                            <th>Último Acceso</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>jperez</td>
+                                            <td>Juan Pérez</td>
+                                            <td>jperez@isossoma.com</td>
+                                            <td><span class="badge badge-danger">Administrador</span></td>
+                                            <td>30/09/2025 10:30</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn edit" onclick="editUser()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('usuario')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>mgarcia</td>
+                                            <td>María García</td>
+                                            <td>mgarcia@isossoma.com</td>
+                                            <td><span class="badge badge-warning">Cotizador</span></td>
+                                            <td>29/09/2025 16:45</td>
+                                            <td><span class="badge badge-success">Activo</span></td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn edit" onclick="editUser()"
+                                                        title="Editar">✏️</button>
+                                                    <button class="action-btn delete" onclick="deleteItem('usuario')"
+                                                        title="Eliminar">🗑️</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Quotation Modal -->
+    <div class="modal" id="quotationModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Nueva Cotización</h3>
+                <button class="close-modal" onclick="closeModal('quotationModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">N° Cotización</label>
+                            <input type="text" class="form-control" value="COT-2025-003" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" class="form-control" value="2025-09-30">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cliente *</label>
+                            <select class="form-control" required>
+                                <option value="">Seleccione un cliente</option>
+                                <option>Empresa Minera ABC</option>
+                                <option>Constructora DEF</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Vigencia (días)</label>
+                            <input type="number" class="form-control" value="30">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Descripción del Proyecto</label>
+                        <textarea class="form-control" rows="3"
+                            placeholder="Describe el alcance del proyecto..."></textarea>
+                    </div>
+
+                    <h4 style="margin: 24px 0 16px; color: var(--primary-blue);">Servicios / Items</h4>
+
+                    <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr 1fr auto; align-items: end;">
+                        <div class="form-group">
+                            <label class="form-label">Servicio</label>
+                            <select class="form-control" id="serviceSelect">
+                                <option value="">Seleccione servicio</option>
+                                <option value="EIA|8500">EIA - S/ 8,500</option>
+                                <option value="DIA|5200">DIA - S/ 5,200</option>
+                                <option value="Monitoreo|350">Monitoreo de Agua - S/ 350</option>
+                                <option value="Capacitación|180">Capacitación - S/ 180</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cantidad</label>
+                            <input type="number" class="form-control" id="quantityInput" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Precio Unit.</label>
+                            <input type="number" class="form-control" id="priceInput" value="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Subtotal</label>
+                            <input type="text" class="form-control" id="subtotalInput" value="S/ 0.00" readonly>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" onclick="addQuotationItem()">
+                                ➕
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="quotation-items" id="quotationItemsList">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">No hay servicios
+                            agregados</p>
+                    </div>
+
+                    <div class="quotation-summary">
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <span id="summarySubtotal">S/ 0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>IGV (18%):</span>
+                            <span id="summaryIGV">S/ 0.00</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>Total:</span>
+                            <span id="summaryTotal">S/ 0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Observaciones</label>
+                        <textarea class="form-control" rows="2" placeholder="Notas adicionales..."></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('quotationModal')">Cancelar</button>
+                        <button type="button" class="btn btn-info">
+                            📄 Guardar y Generar PDF
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            💾 Guardar Cotización
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Modal -->
+    <div class="modal" id="clientModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nuevo Cliente</h3>
+                <button class="close-modal" onclick="closeModal('clientModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Documento *</label>
+                            <select class="form-control" required>
+                                <option value="RUC">RUC</option>
+                                <option value="DNI">DNI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">N° Documento *</label>
+                            <input type="text" class="form-control" placeholder="20123456789" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Razón Social / Nombre Completo *</label>
+                        <input type="text" class="form-control" placeholder="Empresa ABC S.A.C." required>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nombre de Contacto *</label>
+                            <input type="text" class="form-control" placeholder="Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cargo</label>
+                            <input type="text" class="form-control" placeholder="Gerente de Operaciones">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-control" placeholder="contacto@empresa.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Teléfono *</label>
+                            <input type="tel" class="form-control" placeholder="+51 987 654 321" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" class="form-control" placeholder="Av. Principal 123, Lima">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Observaciones</label>
+                        <textarea class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('clientModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-success">
+                            💾 Guardar Cliente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tariff Modal -->
+    <div class="modal" id="tariffModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nuevo Servicio</h3>
+                <button class="close-modal" onclick="closeModal('tariffModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Código *</label>
+                            <input type="text" class="form-control" placeholder="SRV-005" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Categoría *</label>
+                            <select class="form-control" required>
+                                <option value="">Seleccione</option>
+                                <option>Estudios Ambientales</option>
+                                <option>Monitoreo Ambiental</option>
+                                <option>Capacitación</option>
+                                <option>Consultoría</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Nombre del Servicio *</label>
+                        <input type="text" class="form-control" placeholder="Ej: Monitoreo de Calidad de Aire" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" rows="3"
+                            placeholder="Descripción detallada del servicio..."></textarea>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Unidad de Medida *</label>
+                            <select class="form-control" required>
+                                <option value="">Seleccione</option>
+                                <option>Proyecto</option>
+                                <option>Punto</option>
+                                <option>Hora</option>
+                                <option>Día</option>
+                                <option>Mes</option>
+                                <option>Unidad</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Precio Unitario (S/) *</label>
+                            <input type="number" class="form-control" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('tariffModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-success">
+                            💾 Guardar Servicio
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nuevo Usuario</h3>
+                <button class="close-modal" onclick="closeModal('userModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nombre Completo *</label>
+                            <input type="text" class="form-control" placeholder="Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Usuario *</label>
+                            <input type="text" class="form-control" placeholder="jperez" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email *</label>
+                        <input type="email" class="form-control" placeholder="jperez@isossoma.com" required>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Contraseña *</label>
+                            <input type="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar Contraseña *</label>
+                            <input type="password" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rol *</label>
+                        <select class="form-control" required>
+                            <option value="">Seleccione un rol</option>
+                            <option>Administrador</option>
+                            <option>Cotizador</option>
+                            <option>Visualizador</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="closeModal('userModal')">Cancelar</button>
+                        <button type="submit" class="btn btn-success">
+                            💾 Guardar Usuario
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login
+        function handleLogin() {
+            const loginPage = document.getElementById('loginPage');
+            const mainApp = document.getElementById('mainApp');
+
+            loginPage.style.opacity = '0';
+
+            setTimeout(() => {
+                loginPage.style.display = 'none';
+                mainApp.style.display = 'flex';
+
+                setTimeout(() => {
+                    mainApp.classList.add('show');
+                }, 50);
+            }, 300);
+        }
+
+        // Also allow Enter key to login
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+
+            [loginEmail, loginPassword].forEach(input => {
+                input.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            });
+        });
+
+        // Navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function () {
+                const page = this.dataset.page;
+                showPage(page);
+
+                document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function showPage(page) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+
+            const titles = {
+                'dashboard': 'Dashboard',
+                'quotations': 'Gestión de Cotizaciones',
+                'clients': 'Gestión de Clientes',
+                'tariffs': 'Mantenimiento de Tarifario',
+                'users': 'Gestión de Usuarios'
+            };
+
+            document.getElementById('pageTitle').textContent = titles[page];
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Quotation Items Management
+        let quotationItems = [];
+
+        document.getElementById('serviceSelect').addEventListener('change', function () {
+            const value = this.value;
+            if (value) {
+                const [service, price] = value.split('|');
+                document.getElementById('priceInput').value = price;
+                calculateSubtotal();
+            }
+        });
+
+        document.getElementById('quantityInput').addEventListener('input', calculateSubtotal);
+        document.getElementById('priceInput').addEventListener('input', calculateSubtotal);
+
+        function calculateSubtotal() {
+            const qty = parseFloat(document.getElementById('quantityInput').value) || 0;
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+            const subtotal = qty * price;
+            document.getElementById('subtotalInput').value = 'S/ ' + subtotal.toFixed(2);
+        }
+
+        function addQuotationItem() {
+            const serviceSelect = document.getElementById('serviceSelect');
+            const qty = parseFloat(document.getElementById('quantityInput').value) || 0;
+            const price = parseFloat(document.getElementById('priceInput').value) || 0;
+
+            if (!serviceSelect.value || qty <= 0 || price <= 0) {
+                alert('Por favor complete todos los campos del servicio');
+                return;
+            }
+
+            const serviceName = serviceSelect.options[serviceSelect.selectedIndex].text.split(' - ')[0];
+            const subtotal = qty * price;
+
+            const item = {
+                id: Date.now(),
+                service: serviceName,
+                quantity: qty,
+                price: price,
+                subtotal: subtotal
+            };
+
+            quotationItems.push(item);
+            renderQuotationItems();
+            updateQuotationSummary();
+
+            serviceSelect.value = '';
+            document.getElementById('quantityInput').value = '1';
+            document.getElementById('priceInput').value = '0';
+            document.getElementById('subtotalInput').value = 'S/ 0.00';
+        }
+
+        function removeQuotationItem(id) {
+            quotationItems = quotationItems.filter(item => item.id !== id);
+            renderQuotationItems();
+            updateQuotationSummary();
+        }
+
+        function renderQuotationItems() {
+            const container = document.getElementById('quotationItemsList');
+
+            if (quotationItems.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">No hay servicios agregados</p>';
+                return;
+            }
+
+            container.innerHTML = quotationItems.map(item => `
+                <div class="quotation-item">
+                    <div style="flex: 1;">
+                        <strong>${item.service}</strong><br>
+                        <small style="color: var(--text-secondary);">
+                            Cantidad: ${item.quantity} | Precio Unit.: S/ ${item.price.toFixed(2)}
+                        </small>
+                    </div>
+                    <div style="font-weight: 600; color: var(--primary-blue); margin-right: 12px;">
+                        S/ ${item.subtotal.toFixed(2)}
+                    </div>
+                    <button class="action-btn delete" onclick="removeQuotationItem(${item.id})">
+                        ✕
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateQuotationSummary() {
+            const subtotal = quotationItems.reduce((sum, item) => sum + item.subtotal, 0);
+            const igv = subtotal * 0.18;
+            const total = subtotal + igv;
+
+            document.getElementById('summarySubtotal').textContent = 'S/ ' + subtotal.toFixed(2);
+            document.getElementById('summaryIGV').textContent = 'S/ ' + igv.toFixed(2);
+            document.getElementById('summaryTotal').textContent = 'S/ ' + total.toFixed(2);
+        }
+
+        // Edit Functions
+        function editQuotation(id) {
+            openModal('quotationModal');
+            document.querySelector('#quotationModal .modal-title').textContent = 'Editar Cotización';
+        }
+
+        function editClient() {
+            openModal('clientModal');
+            document.querySelector('#clientModal .modal-title').textContent = 'Editar Cliente';
+        }
+
+        function editTariff() {
+            openModal('tariffModal');
+            document.querySelector('#tariffModal .modal-title').textContent = 'Editar Servicio';
+        }
+
+        function editUser() {
+            openModal('userModal');
+            document.querySelector('#userModal .modal-title').textContent = 'Editar Usuario';
+        }
+        function deleteItem(itemType) {
+            if (confirm(`¿Está seguro que desea eliminar este ${itemType}?`)) {
+                alert(`${itemType.charAt(0).toUpperCase() + itemType.slice(1)} eliminado correctamente`);
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('¿Está seguro que desea cerrar sesión?')) {
+                const mainApp = document.getElementById('mainApp');
+                const loginPage = document.getElementById('loginPage');
+
+                mainApp.classList.remove('show');
+
+                setTimeout(() => {
+                    mainApp.style.display = 'none';
+                    loginPage.style.display = 'flex';
+                    loginPage.style.opacity = '1';
+                }, 300);
+
+                quotationItems = [];
+            }
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function (e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const modal = this.closest('.modal');
+                if (modal) {
+                    alert('Registro guardado exitosamente');
+                    modal.classList.remove('active');
+                    this.reset();
+                    if (quotationItems.length > 0) {
+                        quotationItems = [];
+                        renderQuotationItems();
+                        updateQuotationSummary();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
